@@ -3,7 +3,6 @@ let pozoAcumulado = 100;
 let saldoCliente = 100;
 let claveUsuario = 1234;
 let userId = "RB";
-let ingreso = false;
 
 function landing() {
     let userChoice = "2";
@@ -54,7 +53,7 @@ function login() {
         );
         if (claveUsuarioIngresada === claveUsuario) {
           alert("Login exitoso!");
-          ingreso = true;
+          coreProgram();
           break;
         } else {
           if (i >= 1) {
@@ -81,7 +80,7 @@ function login() {
     }
   }
 }
-if (ingreso == true) {
+function coreProgram() {
   let opcionInvalida = true;
   while (opcionInvalida == true) {
     let userChoice = prompt(
@@ -171,8 +170,8 @@ if (ingreso == true) {
         alert(
           "Gracias por utilizar nuestra plataforma. Esperamos verte pronto!"
         );
-        ingreso = false;
         opcionInvalida = false;
+        landing();
         break;
       default:
         alert("Elegiste una opción inválida. Elige nuevamente.");

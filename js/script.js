@@ -2,10 +2,49 @@ const numeroGanador = 3;
 let pozoAcumulado = 100;
 let saldoCliente = 100;
 let claveUsuario = 1234;
-const userId = "RB";
+let userId = "RB";
+let ingreso = false;
+
+function landing() {
+    let userChoice = "2";
+    while (userChoice != "1"){
+    userChoice = prompt("Elegí una opción: \n1 - Loguearme \n2 - Recuperar contraseña \n3 - Registrarme");
+    switch(userChoice){
+        case "1":
+            login();
+            break;
+        case "2":
+            let usuarioInvalido = true;
+            while (usuarioInvalido == true) {
+            let passRecovery = prompt("Ingrese su nombre de usuario.");
+            if (passRecovery == userId) {
+                alert("Su clave es " +claveUsuario + ".");
+                usuarioInvalido = false;
+            } else {
+                alert("El usuario ingresado no existe. Reintente por favor.")
+            }
+        }
+            break;
+        case "3":
+                        registrarme();
+            break;
+        default:
+            alert("Elegiste una opción inválida. Elige nuevamente.");
+            break;
+    }
+}
+}
+
+landing();
+
+function registrarme() {
+    userId = prompt("Gracias por elegirnos. Para registrarte, por favor elige tu username.");
+    claveUsuario = parseInt(prompt("Por favor elige tu clave."));
+    alert("Su registro ha sido exitoso!");
+    landing();
+}
 
 function login() {
-  let ingreso = false;
   for (let i = 2; i >= 0; i--) {
     let userIdIngresado = prompt("Ingrese su nombre de usuario...");
     if (userIdIngresado === userId) {
@@ -25,7 +64,7 @@ function login() {
                 " intentos."
             );
           } else {
-            alert("Cuenta bloqueada. Espere 1 hora e intente nuevamente");
+            alert("Cuenta bloqueada. Espere 1 hora e intente nuevamente.");
           }
         }
       }
@@ -36,18 +75,17 @@ function login() {
           "Usuario invalido, intente nuevamente. Quedan " + i + " intentos."
         );
       } else {
-        alert("Por favor registrarse y crear una cuenta nueva");
+        alert("Has excedido el numero maximo de intentos de login. Seras llevado a la pagina de nuevos registros.");
+        registrarme();
       }
     }
   }
-  return ingreso;
 }
-
-if (login()) {
+if (ingreso == true) {
   let opcionInvalida = true;
   while (opcionInvalida == true) {
     let userChoice = prompt(
-      "Elegí una opción: \n1- Ver saldo disponible \n2 - Cargar Saldo \n3 - Retirar Saldo \n4 - Jugar \n5 - Salir"
+      "Elegí una opción: \n1 - Ver saldo disponible \n2 - Cargar Saldo \n3 - Retirar Saldo \n4 - Jugar \n5 - Salir"
     );
     switch (userChoice) {
       case "1":
@@ -100,7 +138,7 @@ if (login()) {
                 if (numeroJugado == numeroGanador) {
                   saldoCliente = saldoCliente + saldoJugado;
                   alert(
-                    "Has acertado el numero!. Has ganado " +
+                    "Has acertado el numero!. ¡Muy bien! Has ganado un total de " +
                       saldoJugado +
                       "!. El nuevo saldo de tu cuenta es de " +
                       saldoCliente +
@@ -116,7 +154,7 @@ if (login()) {
                 }
               } else {
                 alert(
-                  "Numero invalido, recuerda que debe ser entre 1 y 10. Vuelve a intentar"
+                  "Numero invalido, recuerda que debe ser entre 1 y 10. Vuelve a intentarlo."
                 );
               }
             }
@@ -133,6 +171,7 @@ if (login()) {
         alert(
           "Gracias por utilizar nuestra plataforma. Esperamos verte pronto!"
         );
+        ingreso = false;
         opcionInvalida = false;
         break;
       default:

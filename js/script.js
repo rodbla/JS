@@ -1,6 +1,4 @@
-let saldoCliente = 100;
 let usuarioActivo = {};
-console.log(usuarioActivo);
 
 class Usuario {
     constructor (username, password, saldo, id) {
@@ -24,16 +22,6 @@ class Usuario {
 const usuarios = [
     new Usuario("admin", 12345, 1000, 1),
 ]
-// let userIdIngresado = prompt("Ingrese su nombre de usuario...");
-// if (usuarios.some(usuario => usuario.username == userIdIngresado.toLowerCase())){
-// let claveUsuarioIngresada = parseInt(
-//     prompt("Ingrese su contraseña...")
-//   );
-//   if (usuarios.some(usuario => usuario.password == claveUsuarioIngresada)){
-//     alert("Login exitoso!");
-//   usuarioActivo = usuarios.find(element => element.password == claveUsuarioIngresada);
-//   }}
-//   console.log(usuarioActivo.saldo);
 
 function landing() {
     let userChoice = "2";
@@ -47,6 +35,9 @@ function landing() {
             let usuarioInvalido = true;
             while (usuarioInvalido == true) {
             let passRecovery = prompt("Ingrese su nombre de usuario.");
+            if (passRecovery.length < 1) {
+                alert("Por favor ingresa tu username.")
+            } else {
             let usuarioEncontrado = usuarios.find(usuario => usuario.username == passRecovery.toLowerCase())
             if (usuarioEncontrado) {
                 alert("Su clave es " + usuarioEncontrado.password +".");
@@ -54,7 +45,7 @@ function landing() {
             } else {
                 alert("El usuario ingresado no existe. Reintente por favor.")
             }
-            }
+            }}
             break;
         case "3":
             registrarme();
@@ -72,18 +63,28 @@ function registrarme() {
     registroExitoso = false;
     while (registroExitoso == false) {
     let newUser = prompt("Gracias por elegirnos. Para registrarte, por favor elige tu username.");
-    let newPassword = parseInt(prompt("Por favor elige tu clave. Recuerda que debe ser un numero."));
-    if (isNaN(newPassword)) {
-        alert("No has elegido una clave valida.")
-   }
-else {
-    const usuario = new Usuario(newUser.toLowerCase(), newPassword, 0);
-    usuarios.push(usuario);
-    usuario.assignId(usuarios);
-    registroExitoso = true;
-    alert("Su registro ha sido exitoso!");
-    landing();
-}
+    if (newUser.length < 5 || newUser > 0) {
+        alert("El username deben ser solo letras y tener una extension de al menos 5 caracteres.")
+    } else {
+        let passwordSelection = true;
+        while (passwordSelection == true) {
+        let newPassword = prompt("Por favor elige tu clave. Recuerda que debe ser un numero.");
+        if (isNaN(newPassword) || newPassword.length < 5) {
+            alert("No has elegido una clave valida. Debe ser un numero de al menos 5 caracteres.")
+       }
+       else {
+        const usuario = new Usuario(newUser.toLowerCase(), parseInt(newPassword), 0);
+        usuarios.push(usuario);
+        usuario.assignId(usuarios);
+        registroExitoso = true;
+        passwordSelection = false;
+        alert("Su registro ha sido exitoso!");
+        landing();
+    }
+    }
+    }
+   
+
 }
 }
 

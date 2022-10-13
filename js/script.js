@@ -1,8 +1,39 @@
-const numeroGanador = 3;
-let pozoAcumulado = 100;
 let saldoCliente = 100;
-let claveUsuario = 1234;
-let userId = "RB";
+let usuarioActivo = {};
+console.log(usuarioActivo);
+
+class Usuario {
+    constructor (username, password, saldo, id) {
+        this.username = username;
+        this.password = parseInt(password);
+        this.saldo = parseInt(saldo);
+        this.id = parseInt(id);
+    }
+
+        assignId(array){
+            this.id = array.length;
+        }
+
+        cambiarClave () {
+            let nuevaClave = prompt("Tipea tu nueva clave");
+            this.password = nuevaClave;
+        }
+
+    }
+
+const usuarios = [
+    new Usuario("admin", 12345, 1000, 1),
+]
+// let userIdIngresado = prompt("Ingrese su nombre de usuario...");
+// if (usuarios.some(usuario => usuario.username == userIdIngresado.toLowerCase())){
+// let claveUsuarioIngresada = parseInt(
+//     prompt("Ingrese su contraseña...")
+//   );
+//   if (usuarios.some(usuario => usuario.password == claveUsuarioIngresada)){
+//     alert("Login exitoso!");
+//   usuarioActivo = usuarios.find(element => element.password == claveUsuarioIngresada);
+//   }}
+//   console.log(usuarioActivo.saldo);
 
 function landing() {
     let userChoice = "2";
@@ -16,16 +47,17 @@ function landing() {
             let usuarioInvalido = true;
             while (usuarioInvalido == true) {
             let passRecovery = prompt("Ingrese su nombre de usuario.");
-            if (passRecovery == userId) {
-                alert("Su clave es " +claveUsuario + ".");
+            let usuarioEncontrado = usuarios.find(usuario => usuario.username == passRecovery.toLowerCase())
+            if (usuarioEncontrado) {
+                alert("Su clave es " + usuarioEncontrado.password +".");
                 usuarioInvalido = false;
             } else {
                 alert("El usuario ingresado no existe. Reintente por favor.")
             }
-        }
+            }
             break;
         case "3":
-                        registrarme();
+            registrarme();
             break;
         default:
             alert("Elegiste una opción inválida. Elige nuevamente.");
@@ -37,22 +69,35 @@ function landing() {
 landing();
 
 function registrarme() {
-    userId = prompt("Gracias por elegirnos. Para registrarte, por favor elige tu username.");
-    claveUsuario = parseInt(prompt("Por favor elige tu clave."));
+    registroExitoso = false;
+    while (registroExitoso == false) {
+    let newUser = prompt("Gracias por elegirnos. Para registrarte, por favor elige tu username.");
+    let newPassword = parseInt(prompt("Por favor elige tu clave. Recuerda que debe ser un numero."));
+    if (isNaN(newPassword)) {
+        alert("No has elegido una clave valida.")
+   }
+else {
+    const usuario = new Usuario(newUser.toLowerCase(), newPassword, 0);
+    usuarios.push(usuario);
+    usuario.assignId(usuarios);
+    registroExitoso = true;
     alert("Su registro ha sido exitoso!");
     landing();
+}
+}
 }
 
 function login() {
   for (let i = 2; i >= 0; i--) {
     let userIdIngresado = prompt("Ingrese su nombre de usuario...");
-    if (userIdIngresado === userId) {
+        if (usuarios.some(usuario => usuario.username == userIdIngresado.toLowerCase())){
       for (let i = 2; i >= 0; i--) {
         let claveUsuarioIngresada = parseInt(
           prompt("Ingrese su contraseña...")
         );
-        if (claveUsuarioIngresada === claveUsuario) {
+        if (usuarios.some(usuario => usuario.password == claveUsuarioIngresada)){
           alert("Login exitoso!");
+        usuarioActivo = usuarios.find(element => element.password == claveUsuarioIngresada);
           coreProgram();
           break;
         } else {
@@ -88,28 +133,33 @@ function coreProgram() {
     );
     switch (userChoice) {
       case "1":
-        alert(saldoCliente);
+        alert("Su saldo es de " + usuarioActivo.saldo +".");
         break;
       case "2":
         let saldoCarga = parseInt(
           prompt(
-            "Su saldo es " + saldoCliente + ". Cuanto saldo quiere cargar?"
+            "Su saldo es " + usuarioActivo.saldo + ". Cuanto saldo quiere cargar?"
           )
         );
-        saldoCliente = saldoCliente + saldoCarga;
-        alert("Carga exitosa. Su nuevo saldo es de " + saldoCliente + ".");
+        if (saldoCarga > 0){
+        usuarioActivo.saldo = usuarioActivo.saldo + saldoCarga;
+        alert("Carga exitosa. Su nuevo saldo es de " + usuarioActivo.saldo + ".");
         break;
+    } else {
+        alert("El saldo a cargar debe ser un numero entero positivo (Ej. 50, 100, 2000).");
+        break;
+    }
       case "3":
         let montoValido = false;
         while (montoValido == false) {
           let saldoRetira = parseInt(
             prompt(
-              "Su saldo es " + saldoCliente + ". Cuanto saldo quiere Retirar?"
+              "Su saldo es " + usuarioActivo.saldo + ". Cuanto saldo quiere Retirar?"
             )
           );
-          if (saldoRetira > 0 && saldoRetira <= saldoCliente) {
-            saldoCliente = saldoCliente - saldoRetira;
-            alert("Retiro exitoso. Su nuevo saldo es de " + saldoCliente + ".");
+          if (saldoRetira > 0 && saldoRetira <= usuarioActivo.saldo) {
+            usuarioActivo.saldo = usuarioActivo.saldo - saldoRetira;
+            alert("Retiro exitoso. Su nuevo saldo es de " + usuarioActivo.saldo + ".");
             montoValido = true;
           } else {
             alert("Monto invalido. Ingrese un nuevo monto.");
@@ -120,9 +170,9 @@ function coreProgram() {
         let montoJugado = false;
         while (montoJugado == false) {
           let saldoJugado = parseInt(
-            prompt("Tu saldo es de " + saldoCliente + ". Cuanto quieres jugar?")
+            prompt("Tu saldo es de " + usuarioActivo.saldo + ". Cuanto quieres jugar?")
           );
-          if (saldoJugado > 0 && saldoJugado <= saldoCliente) {
+          if (saldoJugado > 0 && saldoJugado <= usuarioActivo.saldo) {
             let numeroInvalido = true;
             while (numeroInvalido == true) {
               let numeroJugado = parseInt(
@@ -134,20 +184,21 @@ function coreProgram() {
                 alert("Realizando sorteo!");
                 numeroInvalido = false;
                 montoJugado = true;
+                let numeroGanador = Math.ceil(Math.random()*10);
                 if (numeroJugado == numeroGanador) {
-                  saldoCliente = saldoCliente + saldoJugado;
+                    usuarioActivo.saldo = usuarioActivo.saldo + saldoJugado;
                   alert(
-                    "Has acertado el numero!. ¡Muy bien! Has ganado un total de " +
+                    "Has acertado el numero! ¡Muy bien! Has ganado un total de " +
                       saldoJugado +
-                      "!. El nuevo saldo de tu cuenta es de " +
-                      saldoCliente +
+                      "! El nuevo saldo de tu cuenta es de " +
+                      usuarioActivo.saldo +
                       "."
                   );
                 } else {
-                  saldoCliente = saldoCliente - saldoJugado;
+                    usuarioActivo.saldo = usuarioActivo.saldo - saldoJugado;
                   alert(
                     "Ouch! No has ganado esta vez. Vuelve a jugar, aun tienes " +
-                      saldoCliente +
+                    usuarioActivo.saldo +
                       " disponible para jugar."
                   );
                 }
@@ -159,8 +210,8 @@ function coreProgram() {
             }
           } else {
             alert(
-              "El saldo jugado es invalido. Debes jugar entre 0 y " +
-                saldoCliente +
+              "El saldo jugado es invalido. Debes jugar entre 1 y " +
+              usuarioActivo.saldo +
                 "."
             );
           }

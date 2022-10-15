@@ -1,4 +1,5 @@
-let usuarioActivo = {};
+// let usuarioActivo = {};
+let usuarioLogueado;
 
 class Usuario {
     constructor (username, password, saldo, id) {
@@ -98,7 +99,8 @@ function login() {
         );
         if (usuarios.some(usuario => usuario.password == claveUsuarioIngresada)){
           alert("Login exitoso!");
-        usuarioActivo = usuarios.find(element => element.password == claveUsuarioIngresada);
+        // usuarioActivo = usuarios.find(element => element.password == claveUsuarioIngresada);
+        usuarioLogueado = usuarios.map(element => element.password).indexOf(claveUsuarioIngresada);
           coreProgram();
           break;
         } else {
@@ -134,17 +136,17 @@ function coreProgram() {
     );
     switch (userChoice) {
       case "1":
-        alert("Su saldo es de " + usuarioActivo.saldo +".");
+        alert("Su saldo es de " + usuarios[usuarioLogueado].saldo +".");
         break;
       case "2":
         let saldoCarga = parseInt(
           prompt(
-            "Su saldo es " + usuarioActivo.saldo + ". Cuanto saldo quiere cargar?"
+            "Su saldo es " + usuarios[usuarioLogueado].saldo + ". Cuanto saldo quiere cargar?"
           )
         );
         if (saldoCarga > 0){
-        usuarioActivo.saldo = usuarioActivo.saldo + saldoCarga;
-        alert("Carga exitosa. Su nuevo saldo es de " + usuarioActivo.saldo + ".");
+        usuarios[usuarioLogueado].saldo = usuarios[usuarioLogueado].saldo + saldoCarga;
+        alert("Carga exitosa. Su nuevo saldo es de " + usuarios[usuarioLogueado].saldo + ".");
         break;
     } else {
         alert("El saldo a cargar debe ser un numero entero positivo (Ej. 50, 100, 2000).");
@@ -155,12 +157,12 @@ function coreProgram() {
         while (montoValido == false) {
           let saldoRetira = parseInt(
             prompt(
-              "Su saldo es " + usuarioActivo.saldo + ". Cuanto saldo quiere Retirar?"
+              "Su saldo es " + usuarios[usuarioLogueado].saldo + ". Cuanto saldo quiere Retirar?"
             )
           );
-          if (saldoRetira > 0 && saldoRetira <= usuarioActivo.saldo) {
-            usuarioActivo.saldo = usuarioActivo.saldo - saldoRetira;
-            alert("Retiro exitoso. Su nuevo saldo es de " + usuarioActivo.saldo + ".");
+          if (saldoRetira > 0 && saldoRetira <= usuarios[usuarioLogueado].saldo) {
+            usuarios[usuarioLogueado].saldo = usuarios[usuarioLogueado].saldo - saldoRetira;
+            alert("Retiro exitoso. Su nuevo saldo es de " + usuarios[usuarioLogueado].saldo + ".");
             montoValido = true;
           } else {
             alert("Monto invalido. Ingrese un nuevo monto.");
@@ -171,9 +173,9 @@ function coreProgram() {
         let montoJugado = false;
         while (montoJugado == false) {
           let saldoJugado = parseInt(
-            prompt("Tu saldo es de " + usuarioActivo.saldo + ". Cuanto quieres jugar?")
+            prompt("Tu saldo es de " + usuarios[usuarioLogueado].saldo + ". Cuanto quieres jugar?")
           );
-          if (saldoJugado > 0 && saldoJugado <= usuarioActivo.saldo) {
+          if (saldoJugado > 0 && saldoJugado <= usuarios[usuarioLogueado].saldo) {
             let numeroInvalido = true;
             while (numeroInvalido == true) {
               let numeroJugado = parseInt(
@@ -187,19 +189,19 @@ function coreProgram() {
                 montoJugado = true;
                 let numeroGanador = Math.ceil(Math.random()*10);
                 if (numeroJugado == numeroGanador) {
-                    usuarioActivo.saldo = usuarioActivo.saldo + saldoJugado;
+                    usuarios[usuarioLogueado].saldo = usuarios[usuarioLogueado].saldo + saldoJugado;
                   alert(
                     "Has acertado el numero! ¡Muy bien! Has ganado un total de " +
                       saldoJugado +
                       "! El nuevo saldo de tu cuenta es de " +
-                      usuarioActivo.saldo +
+                      usuarios[usuarioLogueado].saldo +
                       "."
                   );
                 } else {
-                    usuarioActivo.saldo = usuarioActivo.saldo - saldoJugado;
+                    usuarios[usuarioLogueado].saldo = usuarios[usuarioLogueado].saldo - saldoJugado;
                   alert(
                     "Ouch! No has ganado esta vez. Vuelve a jugar, aun tienes " +
-                    usuarioActivo.saldo +
+                    usuarios[usuarioLogueado].saldo +
                       " disponible para jugar."
                   );
                 }
@@ -212,7 +214,7 @@ function coreProgram() {
           } else {
             alert(
               "El saldo jugado es invalido. Debes jugar entre 1 y " +
-              usuarioActivo.saldo +
+              usuarios[usuarioLogueado].saldo +
                 "."
             );
           }

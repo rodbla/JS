@@ -155,6 +155,7 @@ function coreProgram() {
       case "3":
         let montoValido = false;
         while (montoValido == false) {
+            if (usuarios[usuarioLogueado].saldo !== 0) {
           let saldoRetira = parseInt(
             prompt(
               "Su saldo es " + usuarios[usuarioLogueado].saldo + ". Cuanto saldo quiere Retirar?"
@@ -166,12 +167,17 @@ function coreProgram() {
             montoValido = true;
           } else {
             alert("Monto invalido. Ingrese un nuevo monto.");
+          }}
+          else {
+            alert("No puede retirar dado que su saldo es 0");
+            montoValido = true;
           }
         }
         break;
       case "4":
         let montoJugado = false;
         while (montoJugado == false) {
+            if (usuarios[usuarioLogueado].saldo !== 0) {
           let saldoJugado = parseInt(
             prompt("Tu saldo es de " + usuarios[usuarioLogueado].saldo + ". Cuanto quieres jugar?")
           );
@@ -217,6 +223,10 @@ function coreProgram() {
               usuarios[usuarioLogueado].saldo +
                 "."
             );
+          }}
+          else {
+            alert("Tu saldo es 0, no puedes jugar. Por favor realiza una nueva carga y podras jugar nuevamente! Te esperamos!");
+            montoJugado = true;
           }
         }
         break;

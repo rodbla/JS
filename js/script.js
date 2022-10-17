@@ -99,7 +99,6 @@ function login() {
         );
         if (usuarios.some(usuario => usuario.password == claveUsuarioIngresada)){
           alert("Login exitoso!");
-        // usuarioActivo = usuarios.find(element => element.password == claveUsuarioIngresada);
         usuarioLogueado = usuarios.map(element => element.password).indexOf(claveUsuarioIngresada);
           coreProgram();
           break;
@@ -205,11 +204,15 @@ function coreProgram() {
                   );
                 } else {
                     usuarios[usuarioLogueado].saldo = usuarios[usuarioLogueado].saldo - saldoJugado;
+                    if (usuarios[usuarioLogueado].saldo == 0) {
+                        alert("Te has quedado sin saldo. Para seguir jugando deberas realizar una carga.")
+                    }
+                    else {
                   alert(
                     "Ouch! No has ganado esta vez. Vuelve a jugar, aun tienes " +
                     usuarios[usuarioLogueado].saldo +
                       " disponible para jugar."
-                  );
+                  );}
                 }
               } else {
                 alert(

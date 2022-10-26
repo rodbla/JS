@@ -84,6 +84,7 @@ function login(user, password) {
                             JSON.stringify(usuarioEncontrado)
                         );
                     modal.hide();
+                    resetInputs();
                     welcome(usuarioActivo(localStorage));
                     mostrarInformacion(interruptor, "d-none");
                     verSaldo();
@@ -99,7 +100,9 @@ function login(user, password) {
                         icon: "warning",
                         backdrop: "#66f4ae55"
                     });
-                } i--;
+                }
+                resetPassInput();
+                i--;
                 break;
             }
             break;
@@ -111,6 +114,7 @@ function login(user, password) {
                     backdrop: "#66f4ae55"
                 });
                 i--;
+                resetInputs();
                 break;
             } else {
                 Swal.fire({
@@ -118,6 +122,7 @@ function login(user, password) {
                     icon: "warning",
                     backdrop: "#66f4ae55"
                 });
+                resetInputs();
                 btnModalRegister.click();
             };
         }
@@ -137,36 +142,46 @@ function registrarme(username, name, password) {
             });
             break;
         } else {
-            let passwordSelection = true;
-            while (passwordSelection == true) {
-                let newPassword = password;
-                if (isNaN(newPassword) || newPassword.length < 5) {
-                    Swal.fire({
-                        text: "No has elegido una clave valida. Debe ser un numero de al menos 5 caracteres.",
-                        icon: "warning",
-                        backdrop: "#66f4ae55"
-                    });
-                    break;
-                } else {
-                    const usuario = new Usuario(
-                        newUser.toLowerCase(),
-                        newName.toLowerCase(),
-                        parseInt(newPassword),
-                        0
-                    );
-                    usuarios.push(usuario);
-                    usuario.assignId(usuarios);
-                    registroExitoso = true;
-                    passwordSelection = false;
-                    Swal.fire({
-                        text: "Su registro ha sido exitoso!",
-                        icon: "success",
-                        backdrop: "#66f4ae55"
-                    });
-                    modal2.hide();
+            if (newName) {
+                let passwordSelection = true;
+                while (passwordSelection == true) {
+                    let newPassword = password;
+                    if (isNaN(newPassword) || newPassword.length < 5) {
+                        Swal.fire({
+                            text: "No has elegido una clave valida. Debe ser un numero de al menos 5 caracteres.",
+                            icon: "warning",
+                            backdrop: "#66f4ae55"
+                        });
+                        break;
+                    } else {
+                        const usuario = new Usuario(
+                            newUser.toLowerCase(),
+                            newName.toLowerCase(),
+                            parseInt(newPassword),
+                            0
+                        );
+                        usuarios.push(usuario);
+                        usuario.assignId(usuarios);
+                        registroExitoso = true;
+                        passwordSelection = false;
+                        Swal.fire({
+                            text: "Su registro ha sido exitoso!",
+                            icon: "success",
+                            backdrop: "#66f4ae55"
+                        });
+                        modal2.hide();
+                        resetInputs();
+                    }
                 }
+                break;
+            } else {
+                Swal.fire({
+                    text: "Debes completar tu nombre.",
+                    icon: "warning",
+                    backdrop: "#66f4ae55"
+                });
+                break;
             }
-            break;
         }
     }
     i = 2;
@@ -210,12 +225,14 @@ function cargarSaldo(carga) {
         });
         verSaldo();
         modal3.hide();
+        resetInputs();
     } else {
         Swal.fire({
             text: "El saldo a cargar debe ser un numero entero positivo (Ej. 50, 100, 2000).",
             icon: "warning",
             backdrop: "#66f4ae55"
         });
+        resetInputs();
     }
 
 }
@@ -240,6 +257,7 @@ function retiraSaldo(retira) {
                 });
                 montoValido = true;
                 modal4.hide();
+                resetInputs();
                 verSaldo();
             } else {
                 Swal.fire({
@@ -247,6 +265,7 @@ function retiraSaldo(retira) {
                     icon: "warning",
                     backdrop: "#66f4ae55"
                 });
+                resetInputs();
                 break;
             }
         } else {
@@ -257,6 +276,7 @@ function retiraSaldo(retira) {
             });
             montoValido = true;
             modal4.hide();
+            resetInputs();
         }
     }
 }
@@ -265,84 +285,108 @@ function jugar(monto, numero) {
     let montoJugado = false;
     while (montoJugado == false) {
         let saldoJugado = parseInt(monto);
-        if (
-            saldoJugado > 0 &&
-            saldoJugado <= usuarios[usuarioLogueado].saldo
-        ) {
-            let numeroInvalido = true;
-            while (numeroInvalido == true) {
-                let numeroJugado = parseInt(numero);
-                numeroInvalido = false;
-                montoJugado = true;
-                let numeroGanador = Math.ceil(Math.random() * 10);
-                let pozoGanador = Math.ceil(Math.random() * 10);
-                if (numeroJugado == numeroGanador) {
-                    if (numeroJugado == pozoGanador) {
-                        usuarios[usuarioLogueado].saldo =
-                            usuarios[usuarioLogueado].saldo +
-                            saldoJugado +
-                            JSON.parse(localStorage.getItem("pozoAcumulado"));
-                        Swal.fire({
-                            text: "Con tu numero: " +
-                                numeroJugado +
-                                " has acertado el numero y ademas ganado el pozo acumulado! ¡Muy bien! Has ganado un total de " +
-                                saldoJugado +
-                                " por tu apuesta y " +
-                                pozoAcumulado +
-                                " por haber ganado el pozo! El nuevo saldo de tu cuenta es de " +
+        if (usuarios[usuarioLogueado].saldo == 0) {
+            Swal.fire({
+                text: "No puedes jugar, te has quedado sin saldo. Te llevaremos a la seccion de carga de saldo.",
+                icon: "warning",
+                backdrop: "#66f4ae55"
+            })
+            modal5.hide();
+            modal3.show();
+            break;
+        } else {
+            if (
+                saldoJugado > 0 &&
+                saldoJugado <= usuarios[usuarioLogueado].saldo
+            ) {
+                let numeroInvalido = true;
+                while (numeroInvalido == true) {
+                    let numeroJugado = parseInt(numero);
+                    numeroInvalido = false;
+                    montoJugado = true;
+                    let numeroGanador = Math.ceil(Math.random() * 10);
+                    let pozoGanador = Math.ceil(Math.random() * 10);
+                    if (numeroJugado == numeroGanador) {
+                        if (numeroJugado == pozoGanador) {
+                            usuarios[usuarioLogueado].saldo =
                                 usuarios[usuarioLogueado].saldo +
-                                ".",
-                            icon: "success",
-                            backdrop: "#66f4ae55"
-                        });
-                        pozoAcumulado = 0;
+                                saldoJugado +
+                                JSON.parse(localStorage.getItem("pozoAcumulado"));
+                            Swal.fire({
+                                text: "Con tu numero: " +
+                                    numeroJugado +
+                                    " has acertado el numero y ademas ganado el pozo acumulado! ¡Muy bien! Has ganado un total de " +
+                                    saldoJugado +
+                                    " por tu apuesta y " +
+                                    pozoAcumulado +
+                                    " por haber ganado el pozo! El nuevo saldo de tu cuenta es de " +
+                                    usuarios[usuarioLogueado].saldo +
+                                    ".",
+                                icon: "success",
+                                backdrop: "#66f4ae55"
+                            });
+                            pozoAcumulado = 0;
+                            localStorage.setItem(
+                                "pozoAcumulado",
+                                JSON.stringify(pozoAcumulado)
+                            );
+                            resetInputs();
+                        } else {
+                            usuarios[usuarioLogueado].saldo =
+                                usuarios[usuarioLogueado].saldo + saldoJugado;
+                            Swal.fire({
+                                text: "Con tu numero: " +
+                                    numeroJugado +
+                                    ". No has ganado el pozo acumulado, pero si has acertado el numero del sorteo! ¡Muy bien! Has ganado un total de " +
+                                    saldoJugado +
+                                    "! El nuevo saldo de tu cuenta es de " +
+                                    usuarios[usuarioLogueado].saldo +
+                                    ".",
+                                icon: "success",
+                                backdrop: "#66f4ae55"
+                            });
+                            resetInputs();
+                        }
+                    } else {
+                        usuarios[usuarioLogueado].saldo =
+                            usuarios[usuarioLogueado].saldo - saldoJugado;
+                        pozoAcumulado =
+                            Math.round(
+                                JSON.parse(localStorage.getItem("pozoAcumulado"))
+                                +
+                                saldoJugado / 2);
                         localStorage.setItem(
                             "pozoAcumulado",
                             JSON.stringify(pozoAcumulado)
                         );
-                    } else {
-                        usuarios[usuarioLogueado].saldo =
-                            usuarios[usuarioLogueado].saldo + saldoJugado;
-                        Swal.fire({
-                            text: "Con tu numero: " +
-                                numeroJugado +
-                                ". No has ganado el pozo acumulado, pero si has acertado el numero del sorteo! ¡Muy bien! Has ganado un total de " +
-                                saldoJugado +
-                                "! El nuevo saldo de tu cuenta es de " +
-                                usuarios[usuarioLogueado].saldo +
-                                ".",
-                            icon: "success",
+                        usuarios[usuarioLogueado].saldo == 0 ? Swal.fire({
+                            text: "Te has quedado sin saldo. Para seguir jugando deberas realizar una carga.",
+                            icon: "warning",
                             backdrop: "#66f4ae55"
-                        });
+                        }) : toast(numeroGanador);
+                        resetInputs();
                     }
-                } else {
-                    usuarios[usuarioLogueado].saldo =
-                        usuarios[usuarioLogueado].saldo - saldoJugado;
-                    pozoAcumulado =
-                        Math.round(
-                            JSON.parse(localStorage.getItem("pozoAcumulado"))
-                            +
-                            saldoJugado / 2);
-                    localStorage.setItem(
-                        "pozoAcumulado",
-                        JSON.stringify(pozoAcumulado)
-                    );
-                    usuarios[usuarioLogueado].saldo == 0 ? Swal.fire({
-                        text: "Te has quedado sin saldo. Para seguir jugando deberas realizar una carga.",
-                        icon: "warning",
-                        backdrop: "#66f4ae55"
-                    }) : toast(numeroGanador);
                 }
+            } else if (usuarios[usuarioLogueado].saldo == 1) {
+                Swal.fire({
+                    text: "El saldo jugado es invalido. Debes jugar tu saldo restante, que es de 1.",
+                    icon: "warning",
+                    backdrop: "#66f4ae55"
+                });
+                resetInputs();
+                break;
             }
-        } else {
-            Swal.fire({
-                text: "El saldo jugado es invalido. Debes jugar entre 1 y " +
-                    usuarios[usuarioLogueado].saldo +
-                    ".",
-                icon: "warning",
-                backdrop: "#66f4ae55"
-            });
-            break;
+            else {
+                Swal.fire({
+                    text: "El saldo jugado es invalido. Debes jugar entre 1 y " +
+                        usuarios[usuarioLogueado].saldo +
+                        ".",
+                    icon: "warning",
+                    backdrop: "#66f4ae55"
+                });
+                resetInputs();
+                break;
+            }
         }
     }
 }
@@ -377,6 +421,17 @@ function toast(numeroGanador) {
                 }).showToast();
             }
         });
+}
+
+function resetInputs() {
+    let inputs = document.querySelectorAll('input');
+    inputs.forEach(function (input) {
+        input.value = "";
+    });
+}
+
+function resetPassInput() {
+    passLogin.value = "";
 }
 
 btnLogin.addEventListener("click", (e) => {

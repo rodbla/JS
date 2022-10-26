@@ -45,15 +45,17 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <div class="modal-body py-2 px-4">
-                            <input id="usernameLogin" class="form-control my-4" type="email"
-                                placeholder="Ingresa tu username" required>
-                            <input id="passwordLogin" class="form-control my-4" type="password"
-                                placeholder="Ingresa tu contraseña" required>
-                        </div>
-                        <div class="modal-footer d-block">
-                            <button class="btn btn-outline-primary" id="login" type="submit">Ingresar</button>
-                        </div>
+                        <form id="formulario">
+                            <div class="modal-body py-2 px-4">
+                                <input id="usernameLogin" class="form-control my-4" type="email"
+                                    placeholder="Ingresa tu username" required>
+                                <input id="passwordLogin" class="form-control my-4" type="password"
+                                    placeholder="Ingresa tu contraseña" required>
+                            </div>
+                            <div class="modal-footer d-block">
+                                <button class="btn btn-outline-primary" id="login" type="submit">Ingresar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -65,17 +67,20 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <div class="modal-body py-2 px-4">
-                            <input id="usernameRegister" class="form-control my-4" type="text"
-                                placeholder="Selecciona tu username, debe ser de al menos 5 caracteres." required>
-                            <input id="nameRegister" class="form-control my-4" type="text"
-                            placeholder="Como te llamas?" required>
-                            <input id="passwordRegister" class="form-control my-4" type="password"
-                                placeholder="Selecciona tu clave. Debe ser numerica y de al menos 5 caracteres." required>
-                        </div>
-                        <div class="modal-footer d-block">
-                            <button class="btn btn-outline-primary" id="register" type="submit">Registrarte</button>
-                        </div>
+                        <form id="formulario">
+                            <div class="modal-body py-2 px-4">
+                                <input id="usernameRegister" class="form-control my-4" type="text"
+                                    placeholder="Selecciona tu username, debe ser de al menos 5 caracteres." required>
+                                <input id="nameRegister" class="form-control my-4" type="text"
+                                placeholder="Como te llamas?" required>
+                                <input id="passwordRegister" class="form-control my-4" type="password"
+                                    placeholder="Selecciona tu clave. Debe ser numerica y de al menos 5 caracteres." required>
+                                
+                            </div>
+                            <div class="modal-footer d-block">
+                                <button class="btn btn-outline-primary" id="register" type="submit">Registrarte</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -89,13 +94,15 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <div class="modal-body py-2 px-4">
-                            <input id="montoCarga" class="form-control my-4" type="text"
-                                placeholder="Ingresa el monto que quiere cargar a tu cuenta." required>
-                        </div>
-                        <div class="modal-footer d-block">
-                            <button class="btn btn-outline-primary" id="cargar" type="submit">Realizar carga</button>
-                        </div>
+                        <form id="formulario">
+                            <div class="modal-body py-2 px-4">
+                                <input id="montoCarga" class="form-control my-4" type="text"
+                                    placeholder="Ingresa el monto que quiere cargar a tu cuenta." required>
+                            </div>
+                            <div class="modal-footer d-block">
+                                <button class="btn btn-outline-primary" id="cargar" type="submit">Realizar carga</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -107,13 +114,15 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <div class="modal-body py-2 px-4">
-                            <input id="montoRetira" class="form-control my-4" type="text"
-                                placeholder="Selecciona el monto que quieres retirar." required>
-                        </div>
-                        <div class="modal-footer d-block">
-                            <button class="btn btn-outline-primary" id="retirar" type="submit">Retirar fondos</button>
-                        </div>
+                        <form id="formulario">
+                            <div class="modal-body py-2 px-4">
+                                <input id="montoRetira" class="form-control my-4" type="text"
+                                    placeholder="Selecciona el monto que quieres retirar." required>
+                            </div>
+                            <div class="modal-footer d-block">
+                                <button class="btn btn-outline-primary" id="retirar" type="submit">Retirar fondos</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -125,28 +134,30 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <div class="modal-body py-2 px-4">
-                            <p><span id="pozoAcumulado">Pozo acumulado: </span></p>
-                            <p><span id="saldoModalJugar">Saldo disponible: </span></p>
-                            <input id="montoJugar" class="form-control my-4" type="text"
-                                placeholder="Selecciona el monto que quieres Jugar." required>
-                            <label for="numeroJugar">Selecciona el numero que quieres jugar!</label>
-                            <select id="numeroJugar" name="numeroJugar">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer d-block">
-                            <button class="btn btn-outline-primary" id="jugar" type="submit">Jugar</button>
-                        </div>
+                        <form id="formulario">
+                            <div class="modal-body py-2 px-4">
+                                <p><span id="pozoAcumulado">Pozo acumulado: </span></p>
+                                <p><span id="saldoModalJugar">Saldo disponible: </span></p>
+                                <input id="montoJugar" class="form-control my-4" type="text"
+                                    placeholder="Selecciona el monto que quieres Jugar." required>
+                                <label for="numeroJugar">Selecciona el numero que quieres jugar!</label>
+                                <select id="numeroJugar" name="numeroJugar">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer d-block">
+                                <button class="btn btn-outline-primary" id="jugar" type="submit">Jugar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

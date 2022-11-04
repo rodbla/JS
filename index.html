@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body>
     <header>
         <nav id="navBar" class="navbar navbar-light navBar">
@@ -29,13 +30,12 @@
                     <button id="btnModalRegister" class="btn btn-outline-primary me-2 toggles" type="button" data-bs-toggle="modal"
                     data-bs-target="#modalRegister">Register</button>
                     <button id="btnLogout" class="btn btn-outline-secondary d-none toggles" type="button">Logout</button>
-                    <p id="userName" class="d-none toggles"></p>
                 </form>
             </div>
         </nav>
     </header>
 
-    <class="container">
+    <main class="container">
         <section id="notLogged" class="toggles">
             <div class="modal" id="modalLogin" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
@@ -45,11 +45,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <form id="formulario">
+                        <form>
                             <div class="modal-body py-2 px-4">
-                                <input id="usernameLogin" class="form-control my-4" type="email"
+                                <input id="usernameLogin" class="form-control my-4" type="email" autocomplete="username"
                                     placeholder="Ingresa tu username" required>
-                                <input id="passwordLogin" class="form-control my-4" type="password"
+                                <input id="passwordLogin" class="form-control my-4" type="password" autocomplete="current-password"
                                     placeholder="Ingresa tu contraseña" required>
                             </div>
                             <div class="modal-footer d-block">
@@ -67,13 +67,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <form id="formulario">
+                        <form>
                             <div class="modal-body py-2 px-4">
-                                <input id="usernameRegister" class="form-control my-4" type="text"
+                                <input id="usernameRegister" class="form-control my-4" type="text" autocomplete="username"
                                     placeholder="Selecciona tu username, debe ser de al menos 5 caracteres." required>
-                                <input id="nameRegister" class="form-control my-4" type="text"
+                                <input id="nameRegister" class="form-control my-4" type="text" autocomplete="name"
                                 placeholder="Como te llamas?" required>
-                                <input id="passwordRegister" class="form-control my-4" type="password"
+                                <input id="passwordRegister" class="form-control my-4" type="password" autocomplete="new-password"
                                     placeholder="Selecciona tu clave. Debe ser numerica y de al menos 5 caracteres." required>
                                 
                             </div>
@@ -85,6 +85,7 @@
                 </div>
             </div>
         </section>
+
         <section>
             <div class="modal" id="modalCarga" tabindex="-1" aria-labelledby="modalCargaLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -94,7 +95,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <form id="formulario">
+                        <form>
                             <div class="modal-body py-2 px-4">
                                 <input id="montoCarga" class="form-control my-4" type="text"
                                     placeholder="Ingresa el monto que quiere cargar a tu cuenta." required>
@@ -114,7 +115,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <form id="formulario">
+                        <form>
                             <div class="modal-body py-2 px-4">
                                 <input id="montoRetira" class="form-control my-4" type="text"
                                     placeholder="Selecciona el monto que quieres retirar." required>
@@ -134,12 +135,12 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Cerrar"></button>
                         </div>
-                        <form id="formulario">
-                            <div class="modal-body py-2 px-4">
+                        <form>
+                            <div class="modal-body py-2 px-4 border-bottom border-secondary">
                                 <p><span id="pozoAcumulado">Pozo acumulado: </span></p>
                                 <p><span id="saldoModalJugar">Saldo disponible: </span></p>
                                 <input id="montoJugar" class="form-control my-4" type="text"
-                                    placeholder="Selecciona el monto que quieres Jugar." required>
+                                    placeholder="Selecciona el monto que quieres jugar." required>
                                 <label for="numeroJugar">Selecciona el numero que quieres jugar!</label>
                                 <select id="numeroJugar" name="numeroJugar">
                                     <option value="1">1</option>
@@ -153,9 +154,10 @@
                                     <option value="9">9</option>
                                     <option value="10">10</option>
                                 </select>
+                                <p><br><span id="funFact"><i>Elije un numero y te dire un dato interesante sobre él.</i></span></p>
                             </div>
-                            <div class="modal-footer d-block">
-                                <button class="btn btn-outline-primary" id="jugar" type="submit">Jugar</button>
+                            <div class="d-grid gap-2">
+                                <button class="my-2 mx-1 btn btn-outline-primary btn-lg" id="jugar" type="submit">Jugar</button>
                             </div>
                         </form>
                     </div>
@@ -164,8 +166,9 @@
         </section>
 
         <section id="loggedUser" class="d-none toggles text-center">
-            <div class="mb-5"><h2>Comencemos a jugar!</h2></div>
-            <h3>Saldo</h3>
+            <div class="mb-5">
+                <h2>Comencemos a jugar!</h2></div>
+                <h3>Saldo</h3>
             <div class="container-fluid text-center px-xxl-5">
                 <div class="row gy-5 border-top border-bottom">
                     <div class="col-12 col-md-4">              
@@ -190,11 +193,13 @@
             </div>
         </section>
     </main>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/script.js"></script>
+
 </body>
 </html>

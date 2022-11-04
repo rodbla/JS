@@ -1,3 +1,4 @@
+// Mapeo de elementos DOM
 const btnLogin = document.getElementById("login"),
     btnLogout = document.getElementById("btnLogout"),
     btnRegister = document.getElementById("register"),
@@ -19,6 +20,7 @@ const btnLogin = document.getElementById("login"),
     numeroJugar = document.getElementById("numeroJugar"),
     saldoModalJugar = document.getElementById("saldoModalJugar"),
     pozoAcumuladoCampo = document.getElementById("pozoAcumulado"),
+    funFactCampo = document.getElementById("funFact"),
     userName = document.getElementById("userName"),
     interruptor = document.querySelectorAll(".toggles"),
     visualizadorSaldo = document.getElementById("visualizadorSaldo"),
@@ -33,11 +35,13 @@ const btnLogin = document.getElementById("login"),
     modal4 = new bootstrap.Modal(modalRetira),
     modal5 = new bootstrap.Modal(modalJugar);
 
+// Variables globales
 let usuarioLogueado;
 let i = 2;
 let pozoAcumulado = 5000;
 localStorage.setItem("pozoAcumulado", JSON.stringify(pozoAcumulado));
 
+// Clase con funcion constructora para nuevos usuarios registrados, contiene metodo de assignacion de ID
 class Usuario {
     constructor(username, name, password, saldo, id) {
         this.username = username;
@@ -52,8 +56,26 @@ class Usuario {
     }
 }
 
+// Construccion de array de usuarios utilizando la clase Usuario
 const usuarios = [new Usuario("admin", "admin", 13579, 1000, 1)];
 
+// Funcion asincrona recupero de usuarios "admin" del archivo JSON local
+async function infoUsuarios(){
+    const respuestaJson = await fetch('./js/users.json');
+    const info = await respuestaJson.json();
+    info.forEach((element)=>{
+        usuarios.push(element)
+    })
+}
+
+// Funcion asincrona con conexion API - Segun numero seleccionado en la pantalla jugar, trae un dato curioso sobre el mismo
+async function datoCuriosoNumero(numero){
+    const respuestaJson = await fetch(`http://numbersapi.com/${numero}?json`);
+    const info = await respuestaJson.json();    
+    funFactCampo.innerHTML = `<i><b>Dato curioso: </i></b><i>${info.text}</i>`;
+}
+
+// Seccion funciones sincronicas
 function login(user, password) {
     for (i; i >= 0; i--) {
         let userIdIngresado = user.toLowerCase();
@@ -85,8 +107,8 @@ function login(user, password) {
                         );
                     modal.hide();
                     resetInputs();
-                    welcome(usuarioActivo(localStorage));
-                    mostrarInformacion(interruptor, "d-none");
+                    saludoBienvenidaUsuario(usuarioActivo(localStorage));
+                    cambiarVista(interruptor, "d-none");
                     verSaldo();
                     mostrarPozo();
                     break;
@@ -196,7 +218,7 @@ function verSaldo() {
     saldoModalJugar.innerHTML = `Saldo disponible: ${usuarios[usuarioLogueado].saldo}`;
 }
 
-function welcome(usuario) {
+function saludoBienvenidaUsuario(usuario) {
     userName.innerHTML = `Bienvenido/a, <span>${usuario.name}</span>`
 }
 
@@ -205,7 +227,7 @@ function usuarioActivo(storage) {
     return usuarioAlmacenado;
 }
 
-function mostrarInformacion(array, clase) {
+function cambiarVista(array, clase) {
     array.forEach(element => {
         element.classList.toggle(clase);
     });
@@ -434,6 +456,11 @@ function resetPassInput() {
     passLogin.value = "";
 }
 
+// Seccion EventListeners
+document.addEventListener("DOMContentLoaded", function() {
+    infoUsuarios();
+});
+
 btnLogin.addEventListener("click", (e) => {
     e.preventDefault();
     login(mailLogin.value, passLogin.value);
@@ -445,7 +472,7 @@ btnRegister.addEventListener("click", (e) => {
 });
 
 btnLogout.addEventListener("click", () => {
-    mostrarInformacion(interruptor, "d-none");
+    cambiarVista(interruptor, "d-none");
     i = 2;
 });
 
@@ -488,4 +515,9 @@ btnJugar.addEventListener("click", (e) => {
     jugar(montoJugar.value, numeroJugar.value);
     mostrarPozo();
     verSaldo();
+});
+
+numeroJugar.addEventListener("change", (e) => {
+    e.preventDefault();
+    datoCuriosoNumero(numeroJugar.value)
 });

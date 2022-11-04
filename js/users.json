@@ -1,0 +1,21 @@
+[{
+    "username":"admin2",
+    "name":"admin2",
+    "password":13570,
+    "saldo":1000,
+    "id":2
+},
+{
+    "username":"superuser",
+    "name":"superuser",
+    "password":13568,
+    "saldo":1000,
+    "id":3
+},
+{
+    "username":"sysadmin",
+    "name":"sysadmin",
+    "password":12579,
+    "saldo":1000,
+    "id":4
+}]

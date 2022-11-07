@@ -1,21 +1,21 @@
 [{
     "username":"supervisor",
     "name":"supervisor",
-    "password":13570,
+    "password":492771,
     "saldo":1000,
     "id":2
 },
 {
     "username":"superuser",
     "name":"superuser",
-    "password":13568,
+    "password":924183,
     "saldo":1000,
     "id":3
 },
 {
     "username":"sysadmin",
     "name":"sysadmin",
-    "password":12579,
+    "password":296327,
     "saldo":1000,
     "id":4
 }]

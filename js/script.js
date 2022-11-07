@@ -465,6 +465,7 @@ btnRegister.addEventListener("click", (e) => {
 btnLogout.addEventListener("click", () => {
     cambiarVista(interruptor, "d-none");
     usuarios[usuarioLogueado].saldo = saldoUsuario;
+    localStorage.removeItem("usuarioLogueado");
     i = 2;
 });
 

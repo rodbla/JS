@@ -366,11 +366,8 @@ function jugar(monto, numero) {
                         }
                     } else {
                         saldoUsuario -= saldoJugado;
-                        pozoAcumulado =
-                            Math.round(
-                                JSON.parse(localStorage.getItem("pozoAcumulado"))
-                                +
-                                saldoJugado / 2);
+                        pozoAcumulado +=
+                            Math.round(saldoJugado / 2);
                         localStorage.setItem(
                             "pozoAcumulado",
                             JSON.stringify(pozoAcumulado)

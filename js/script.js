@@ -156,7 +156,10 @@ function registrarme(username, name, password) {
     while (registroExitoso == false) {
         let newUser = username.toLowerCase();
         let newName = name.toLowerCase();
-        if (newUser.length < 5 || newUser > 0) {
+        let usuarioExistente = usuarios.some(
+            (userInfo) => userInfo.username == newUser);
+        console.log(usuarioExistente);
+        if (newUser.length < 5 || newUser > 0)  {
             Swal.fire({
                 text: "El usuario debe ser de al menos 5 letras.",
                 icon: "warning",
@@ -164,6 +167,14 @@ function registrarme(username, name, password) {
             });
             break;
         } else {
+            if (usuarioExistente) {
+                Swal.fire({
+                    text: "El username ya existe, por favor intenta con otro.",
+                    icon: "warning",
+                    backdrop: "#66f4ae55"
+                });
+                break;
+            } else {
             if (newName) {
                 let passwordSelection = true;
                 while (passwordSelection == true) {
@@ -203,7 +214,7 @@ function registrarme(username, name, password) {
                     backdrop: "#66f4ae55"
                 });
                 break;
-            }
+            }}
         }
     }
     i = 2;

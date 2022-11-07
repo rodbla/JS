@@ -78,6 +78,9 @@ async function datoCuriosoNumero(numero) {
 function login(user, password) {
     for (i; i >= 0; i--) {
         let userIdIngresado = user.toLowerCase();
+        let usuarioExiste = usuarios
+        .map((element) => element.username)
+        .indexOf(userIdIngresado);
         if (
             usuarios.some(
                 (usuario) => usuario.username == userIdIngresado
@@ -86,11 +89,9 @@ function login(user, password) {
             for (i; i >= 0; i--) {
                 let claveUsuarioIngresada = parseInt(password);
                 if (
-                    usuarios.some((usuario) => usuario.password == claveUsuarioIngresada)
-                ) {
-                    usuarioLogueado = usuarios
-                        .map((element) => element.password)
-                        .indexOf(claveUsuarioIngresada);
+                    usuarios[usuarioExiste].password == claveUsuarioIngresada)
+                 {
+                    usuarioLogueado = usuarioExiste;
                     saldoUsuario = usuarios[usuarioLogueado].saldo;
                     let usuarioEncontrado = usuarios.find(
                         (userInfo) => userInfo.username == userIdIngresado

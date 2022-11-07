@@ -158,7 +158,6 @@ function registrarme(username, name, password) {
         let newName = name.toLowerCase();
         let usuarioExistente = usuarios.some(
             (userInfo) => userInfo.username == newUser);
-        console.log(usuarioExistente);
         if (newUser.length < 5 || newUser > 0)  {
             Swal.fire({
                 text: "El usuario debe ser de al menos 5 letras.",

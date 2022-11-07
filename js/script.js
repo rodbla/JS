@@ -37,11 +37,12 @@ const btnLogin = document.getElementById("login"),
 
 // Variables globales
 let usuarioLogueado;
-let i = 2;
+let saldoUsuario;
+let i = 2; //se utiliza una variable iteracion global para los 2 for en funcion login
 let pozoAcumulado = 5000;
 localStorage.setItem("pozoAcumulado", JSON.stringify(pozoAcumulado));
 
-// Clase con funcion constructora para nuevos usuarios registrados, contiene metodo de assignacion de ID
+// Clase con funcion constructora para nuevos usuarios registrados, contiene metodo de asignacion de ID
 class Usuario {
     constructor(username, name, password, saldo, id) {
         this.username = username;
@@ -60,18 +61,16 @@ class Usuario {
 const usuarios = [new Usuario("admin", "admin", 13579, 1000, 1)];
 
 // Funcion asincrona recupero de usuarios "admin" del archivo JSON local
-async function infoUsuarios(){
+async function infoUsuarios() {
     const respuestaJson = await fetch('./js/users.json');
     const info = await respuestaJson.json();
-    info.forEach((element)=>{
-        usuarios.push(element)
-    })
+    usuarios.push(...info);
 }
 
-// Funcion asincrona con conexion API - Segun numero seleccionado en la pantalla jugar, trae un dato curioso sobre el mismo
-async function datoCuriosoNumero(numero){
+// Funcion asincrona con conexion API - segun numero seleccionado en la pantalla jugar, trae un funfact en ingles (dato curioso)
+async function datoCuriosoNumero(numero) {
     const respuestaJson = await fetch(`http://numbersapi.com/${numero}?json`);
-    const info = await respuestaJson.json();    
+    const info = await respuestaJson.json();
     funFactCampo.innerHTML = `<i><b>Dato curioso: </i></b><i>${info.text}</i>`;
 }
 
@@ -92,6 +91,7 @@ function login(user, password) {
                     usuarioLogueado = usuarios
                         .map((element) => element.password)
                         .indexOf(claveUsuarioIngresada);
+                    saldoUsuario = usuarios[usuarioLogueado].saldo;
                     let usuarioEncontrado = usuarios.find(
                         (userInfo) => userInfo.username == userIdIngresado
                     );
@@ -214,8 +214,8 @@ function mostrarPozo() {
 }
 
 function verSaldo() {
-    visualizadorSaldo.innerHTML = `Saldo disponible: ${usuarios[usuarioLogueado].saldo}`;
-    saldoModalJugar.innerHTML = `Saldo disponible: ${usuarios[usuarioLogueado].saldo}`;
+    visualizadorSaldo.innerHTML = `Saldo disponible: ${saldoUsuario}`;
+    saldoModalJugar.innerHTML = `Saldo disponible: ${saldoUsuario}`;
 }
 
 function saludoBienvenidaUsuario(usuario) {
@@ -236,11 +236,10 @@ function cambiarVista(array, clase) {
 function cargarSaldo(carga) {
     let saldoCarga = parseInt(carga);
     if (saldoCarga > 0) {
-        usuarios[usuarioLogueado].saldo =
-            usuarios[usuarioLogueado].saldo + saldoCarga;
+        saldoUsuario += saldoCarga;
         Swal.fire({
             text: "Carga exitosa. Su nuevo saldo es de " +
-                usuarios[usuarioLogueado].saldo +
+                saldoUsuario +
                 ".",
             icon: "success",
             backdrop: "#66f4ae55"
@@ -262,17 +261,16 @@ function cargarSaldo(carga) {
 function retiraSaldo(retira) {
     let montoValido = false;
     while (montoValido == false) {
-        if (usuarios[usuarioLogueado].saldo !== 0) {
+        if (saldoUsuario !== 0) {
             let saldoRetira = parseInt(retira);
             if (
                 saldoRetira > 0 &&
-                saldoRetira <= usuarios[usuarioLogueado].saldo
+                saldoRetira <= saldoUsuario
             ) {
-                usuarios[usuarioLogueado].saldo =
-                    usuarios[usuarioLogueado].saldo - saldoRetira;
+                saldoUsuario -= saldoRetira;
                 Swal.fire({
                     text: "Retiro exitoso. Su nuevo saldo es de " +
-                        usuarios[usuarioLogueado].saldo +
+                        saldoUsuario +
                         ".",
                     icon: "success",
                     backdrop: "#66f4ae55"
@@ -307,7 +305,7 @@ function jugar(monto, numero) {
     let montoJugado = false;
     while (montoJugado == false) {
         let saldoJugado = parseInt(monto);
-        if (usuarios[usuarioLogueado].saldo == 0) {
+        if (saldoUsuario == 0) {
             Swal.fire({
                 text: "No puedes jugar, te has quedado sin saldo. Te llevaremos a la seccion de carga de saldo.",
                 icon: "warning",
@@ -319,7 +317,7 @@ function jugar(monto, numero) {
         } else {
             if (
                 saldoJugado > 0 &&
-                saldoJugado <= usuarios[usuarioLogueado].saldo
+                saldoJugado <= saldoUsuario
             ) {
                 let numeroInvalido = true;
                 while (numeroInvalido == true) {
@@ -330,9 +328,7 @@ function jugar(monto, numero) {
                     let pozoGanador = Math.ceil(Math.random() * 10);
                     if (numeroJugado == numeroGanador) {
                         if (numeroJugado == pozoGanador) {
-                            usuarios[usuarioLogueado].saldo =
-                                usuarios[usuarioLogueado].saldo +
-                                saldoJugado +
+                            saldoUsuario += saldoJugado +
                                 JSON.parse(localStorage.getItem("pozoAcumulado"));
                             Swal.fire({
                                 text: "Con tu numero: " +
@@ -342,7 +338,7 @@ function jugar(monto, numero) {
                                     " por tu apuesta y " +
                                     pozoAcumulado +
                                     " por haber ganado el pozo! El nuevo saldo de tu cuenta es de " +
-                                    usuarios[usuarioLogueado].saldo +
+                                    saldoUsuario +
                                     ".",
                                 icon: "success",
                                 backdrop: "#66f4ae55"
@@ -354,15 +350,14 @@ function jugar(monto, numero) {
                             );
                             resetInputs();
                         } else {
-                            usuarios[usuarioLogueado].saldo =
-                                usuarios[usuarioLogueado].saldo + saldoJugado;
+                            saldoUsuario += saldoJugado;
                             Swal.fire({
                                 text: "Con tu numero: " +
                                     numeroJugado +
                                     ". No has ganado el pozo acumulado, pero si has acertado el numero del sorteo! ¡Muy bien! Has ganado un total de " +
                                     saldoJugado +
                                     "! El nuevo saldo de tu cuenta es de " +
-                                    usuarios[usuarioLogueado].saldo +
+                                    saldoUsuario +
                                     ".",
                                 icon: "success",
                                 backdrop: "#66f4ae55"
@@ -370,8 +365,7 @@ function jugar(monto, numero) {
                             resetInputs();
                         }
                     } else {
-                        usuarios[usuarioLogueado].saldo =
-                            usuarios[usuarioLogueado].saldo - saldoJugado;
+                        saldoUsuario -= saldoJugado;
                         pozoAcumulado =
                             Math.round(
                                 JSON.parse(localStorage.getItem("pozoAcumulado"))
@@ -381,7 +375,7 @@ function jugar(monto, numero) {
                             "pozoAcumulado",
                             JSON.stringify(pozoAcumulado)
                         );
-                        usuarios[usuarioLogueado].saldo == 0 ? Swal.fire({
+                        saldoUsuario == 0 ? Swal.fire({
                             text: "Te has quedado sin saldo. Para seguir jugando deberas realizar una carga.",
                             icon: "warning",
                             backdrop: "#66f4ae55"
@@ -389,7 +383,7 @@ function jugar(monto, numero) {
                         resetInputs();
                     }
                 }
-            } else if (usuarios[usuarioLogueado].saldo == 1) {
+            } else if (saldoUsuario == 1) {
                 Swal.fire({
                     text: "El saldo jugado es invalido. Debes jugar tu saldo restante, que es de 1.",
                     icon: "warning",
@@ -401,7 +395,7 @@ function jugar(monto, numero) {
             else {
                 Swal.fire({
                     text: "El saldo jugado es invalido. Debes jugar entre 1 y " +
-                        usuarios[usuarioLogueado].saldo +
+                        saldoUsuario +
                         ".",
                     icon: "warning",
                     backdrop: "#66f4ae55"
@@ -418,7 +412,7 @@ function toast(numeroGanador) {
         text: "Ouch! El numero sorteado fue el: " +
             numeroGanador +
             ". No has ganado esta vez. Aun tienes un saldo de   " +
-            usuarios[usuarioLogueado].saldo +
+            saldoUsuario +
             " para jugar. El pozo acumulado a subido a " +
             pozoAcumulado +
             ".",
@@ -457,7 +451,7 @@ function resetPassInput() {
 }
 
 // Seccion EventListeners
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
     infoUsuarios();
 });
 
@@ -473,6 +467,7 @@ btnRegister.addEventListener("click", (e) => {
 
 btnLogout.addEventListener("click", () => {
     cambiarVista(interruptor, "d-none");
+    usuarios[usuarioLogueado].saldo = saldoUsuario;
     i = 2;
 });
 
@@ -481,16 +476,15 @@ btnCargar.addEventListener("click", (e) => {
     cargarSaldo(montoCarga.value);
 });
 
-btnModalRetirar.addEventListener("click", (e) => {
-    if (usuarios[usuarioLogueado].saldo > 0) {
-    } else {
-        modal4.hide();
+btnModalRetirar.addEventListener("click", () => {
+    saldoUsuario == 0 &&
         Swal.fire({
             text: "No puede retirar dado que su saldo es 0",
             icon: "warning",
             backdrop: "#66f4ae55"
+        }).then(() => {
+            modal4.hide();
         });
-    }
 });
 
 btnRetirar.addEventListener("click", (e) => {
@@ -498,16 +492,15 @@ btnRetirar.addEventListener("click", (e) => {
     retiraSaldo(montoRetira.value);
 });
 
-btnModalJugar.addEventListener("click", (e) => {
-    if (usuarios[usuarioLogueado].saldo > 0) {
-    } else {
+btnModalJugar.addEventListener("click", () => {
+    saldoUsuario == 0 &&
+    Swal.fire({
+        text: "No puede jugar dado que su saldo es 0",
+        icon: "warning",
+        backdrop: "#66f4ae55"
+    }).then(() => {
         modal5.hide();
-        Swal.fire({
-            text: "No puede jugar dado que su saldo es 0",
-            icon: "warning",
-            backdrop: "#66f4ae55"
-        });
-    }
+    });
 });
 
 btnJugar.addEventListener("click", (e) => {
